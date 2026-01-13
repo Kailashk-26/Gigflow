@@ -1,7 +1,12 @@
+import Home from "./pages/Home"
+import { Route, Routes } from "react-router-dom";
+
 function App() {
   return (
     <>
-      <p className="text-red-500">hello</p>
+      <Routes>
+        <Route path='/' element={<Home/>}/>
+      </Routes>
     </>
   )
 }
