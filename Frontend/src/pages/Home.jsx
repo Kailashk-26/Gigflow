@@ -7,7 +7,7 @@ const Home = () => {
   return (
     <div>
         <Navbar setIsSearchBar={setIsSearchBar}/>
-        <Gigs isSearchBar={isSearchbar}/>
+        <Gigs isSearchBar={isSearchbar} OwnGigsId={null}/>
     </div>
   )
 }
