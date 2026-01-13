@@ -29,7 +29,7 @@ const Navbar = () => {
                 {/* logo */}
                 <div className="flex items-center gap-4">
                     <Search onClick={()=>!setSearchBar} className={`h-6 w-6 text-white transition-all duration-500 ${isScrolled ? "invert" : ""}`}/>
-                    <button onClick={()=>navigate('/state?=login')} className={`px-8 py-2.5 rounded-full ml-4 transition-all duration-500 ${isScrolled ? "text-white bg-black" : "bg-white text-black"}`}>
+                    <button onClick={()=>navigate('/state?')} className={`px-8 py-2.5 rounded-full ml-4 transition-all duration-500 ${isScrolled ? "text-white bg-black" : "bg-white text-black"}`}>
                         Login
                     </button>
                 </div>  
