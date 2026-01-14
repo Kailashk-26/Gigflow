@@ -14,8 +14,8 @@ function App() {
         <Route path='/state' element={<Login/>}/>
         <Route path="/dashboard" element={<Dashboard/>}>
           <Route path="gigs/create" element={<CreateGig/>}/>
-          <Route path="gigs/:id" element={<GigDetail/>}/>
-          <Route path="bids/:id" element={<Bids/>}/>
+          <Route path="gigs/:gigId" element={<GigDetail currentUserId='u1'/>}/>
+          <Route path="bids/:gigId" element={<Bids/>}/>
         </Route>
       </Routes>
     </>
