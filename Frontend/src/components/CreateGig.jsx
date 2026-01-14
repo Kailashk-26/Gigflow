@@ -80,7 +80,7 @@ const CreateGigForm = ({ onSubmit }) => {
             className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-400"
           />
         </div>
-        <div className="mb-6">
+        {/* <div className="mb-6">
           <label className="block text-sm font-medium text-gray-600 mb-1">
             Status
           </label>
@@ -93,7 +93,7 @@ const CreateGigForm = ({ onSubmit }) => {
             <option value="open">Open</option>
             <option value="assigned">Assigned</option>
           </select>
-        </div>
+        </div> */}
 
         <button
           type="submit"
