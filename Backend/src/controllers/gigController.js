@@ -66,7 +66,7 @@ export const getGigById = async (req, res) => {
 
     const gig = await Gig.findById(gigId).populate(
       "ownerId",
-      "name email"
+      "name"
     );
 
     if (!gig) {

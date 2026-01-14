@@ -15,7 +15,7 @@ export const auth = async (req, res) => {
 };
 
 
-// /api/auth/register
+// /api/users/register
 export const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -65,7 +65,7 @@ export const registerUser = async (req, res) => {
   }
 };
 
-// /api/auth/login
+// /api/users/login
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -116,7 +116,7 @@ export const loginUser = async (req, res) => {
   }
 };
 
-// /api/auth/logout
+// /api/users/logout
 export const logoutUser = async (req, res) => {
   try {
     res.cookie("token", "", {

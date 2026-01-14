@@ -9,8 +9,8 @@ import {
 
 const bidRouter = express.Router();
 
-bidRouter.post("/:gigId", protect, placeBid);
-bidRouter.get("/my", protect, getMyBids);
+bidRouter.post("/:gigId/place", protect, placeBid);
+bidRouter.get("/my-gigs", protect, getMyBids);
 bidRouter.get("/gig/:gigId", protect, getBidsForMyGig);
 bidRouter.post("/hire/:bidId", protect, hireBidder);
 

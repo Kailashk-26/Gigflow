@@ -9,8 +9,8 @@ import {
 
 const gigRouter = express.Router();
 
-gigRouter.post("/", protect, createGig);
-gigRouter.get("/", getAllOpenGigs);
+gigRouter.post("/create", protect, createGig);
+gigRouter.get("/all", getAllOpenGigs);
 gigRouter.get("/my-gigs", protect, getMyGigs);
 gigRouter.get("/:gigId", getGigById);
 

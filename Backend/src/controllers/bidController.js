@@ -60,7 +60,7 @@ export const getMyBids = async (req, res) => {
     const bids = await Bid.find({
       freelancerId: req.user._id,
     })
-      .populate("gigId", "title budget status")
+      .populate("gigId", "title")
       .sort({ createdAt: -1 });
 
     res.status(200).json(bids);
