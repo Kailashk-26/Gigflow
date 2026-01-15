@@ -1,10 +1,13 @@
 import { Lock, MailIcon, User2Icon } from "lucide-react";
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import api from "../config/api";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const state = searchParams.get("state") || "login";
+  const navigate=useNavigate();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -12,9 +15,22 @@ const Login = () => {
     password: "",
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(state, formData);
+  const handleSubmit =async(e) => {
+    try{
+      e.preventDefault();
+      if(state==="login"){
+        const {data}=await api.post("api/users/login",{email:formData.email,password:formData.password},{withCredentials:true})
+        toast.success(data.message);
+        navigate("/")
+      }
+      else{
+        const {data}=await api.post("api/users/register",{name:formData.name,email:formData.email,password:formData.password},{withCredentials:true})
+        toast.success(data.message);
+        navigate("/")
+      }
+    }catch(err){
+      toast.error(err.response?.data?.message)
+    }
   };
 
   const handleChange = (e) => {

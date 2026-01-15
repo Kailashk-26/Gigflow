@@ -1,19 +1,33 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { bids, gigs } from "../constant";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import api from "../config/api";
 
 const BidListModal = () => {
   const navigate = useNavigate();
   const {gigId}=useParams()
-  const specificBidList=bids.filter((bid)=>bid.gigId===gigId)
-  const gig=gigs.find((g)=>g.id===gigId)
+  const [specificBidList,setSpecificBidList]=useState([])
 
+  useEffect(()=>{
+    const fetchGigBids=async()=>{
+      try{
+        const {data}=await api.get(`/api/bids/gig/${gigId}`,{withCredentials:true})
+        setSpecificBidList(data)
+      }catch(err){
+        toast.error(err.response?.data?.message)
+      }
+    }
+    fetchGigBids();
+  },[gigId])
 
-  const handleHire = (bidId) => {
-    console.log("Hire bid:", bidId);
-
-    // 1. update bid status -> hired
-    // 2. update gig status -> assigned
-    // 3. reject other bids
+ 
+  const handleHire = async(bidId) => {
+    try{
+      const {data}= await api.post(`/api/bids/hire/${bidId}`,{},{withCredentials:true})
+      toast.success(data.message)
+    }catch(err){
+      toast.error(err.response?.data?.message)
+    }
   };
 
   return (
@@ -30,11 +44,11 @@ const BidListModal = () => {
           Bids
         </h2>
 
-        {gig && (
+        {/* {gig && (
           <p className="text-sm text-gray-500 mb-6">
             {gig.title}
           </p>
-        )}
+        )} */}
 
         {specificBidList.length === 0 ? (
           <p className="text-center text-gray-500 py-10">
@@ -44,13 +58,13 @@ const BidListModal = () => {
           <div className="flex flex-col gap-4 max-h-[70vh] overflow-y-auto">
             {specificBidList.map((bid) => (
               <div
-                key={bid.id}
+                key={bid._id}
                 className="border border-gray-200 rounded-xl p-4 flex flex-col gap-3"
               >
                 {/* Status */}
                 <div className="flex justify-between items-center">
                   <span className="text-sm font-medium text-gray-700">
-                    Bid
+                    {bid.freelancerId.name} - {bid.freelancerId.email}
                   </span>
 
                   <span
@@ -77,12 +91,12 @@ const BidListModal = () => {
                 {/* Footer */}
                 <div className="flex justify-between items-center pt-2 border-t">
                   <span className="text-xs text-gray-500">
-                    Bid ID: {bid.id}
+                    Bid ID: {bid._id.slice(-5)}
                   </span>
 
                   {bid.status === "pending" && (
                     <button
-                      onClick={()=>handleHire(bid.id)}
+                      onClick={()=>handleHire(bid._id)}
                       className="px-4 py-1.5 text-sm rounded-lg bg-red-500 text-white hover:bg-red-600 active:scale-95"
                     >
                       Hire

@@ -1,23 +1,43 @@
-import { useNavigate, useParams} from "react-router-dom";
-import { gigs,bids} from '../constant'
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import api from "../config/api";
+import useAuth from "../hooks/useAuth";
 
-const GigDetail = ({currentUserId }) => {
+const GigDetail = () => {
   const navigate = useNavigate();
-
   const { gigId } = useParams();
+  const { user } = useAuth();
 
-  const gig= gigs.find((g)=>g.id===gigId)
+  const [gig, setGig] = useState(null);
 
-  const isCreator = gig.ownerId === currentUserId;
+  useEffect(() => {
+    const fetchGig = async () => {
+      try {
+        const { data } = await api.get(`/api/gigs/${gigId}`);
+        setGig(data);
+      } catch (err) {
+        toast.error(err.response?.data?.message || "Failed to fetch gig");
+      }
+    };
 
-  const myBid = bids.find(
-    (bid) =>
-      bid.gigId === gig.id &&
-      bid.freelancerId === currentUserId
-  );
+    fetchGig();
+  }, [gigId]);
+
+  if (!gig) return null;
+
+  const ownerId =
+    typeof gig.ownerId === "object"
+      ? gig.ownerId._id
+      : gig.ownerId;
+
+  const isOwner = ownerId === user?._id;
 
   return (
-    <div onClick={()=>navigate(-1)} className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+    <div
+      onClick={() => navigate(-1)}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+    >
       <div
         onClick={(e) => e.stopPropagation()}
         className="w-full max-w-xl bg-white p-6 rounded-2xl shadow-lg"
@@ -26,6 +46,9 @@ const GigDetail = ({currentUserId }) => {
         <h2 className="text-2xl font-semibold text-gray-800 mb-2">
           {gig.title}
         </h2>
+        <h3 className="text-xl font-semibold text-gray-400 mb-2">
+          Created By {gig.ownerId.name}
+        </h3>
 
         <p className="text-gray-600 mb-4">{gig.description}</p>
 
@@ -40,42 +63,30 @@ const GigDetail = ({currentUserId }) => {
 
         {/* ACTION SECTION */}
         <div className="mt-6">
-          {/* Creator View */}
-          {isCreator && (
+          {isOwner ? (
+            gig.status === "open" ? (
+              <button
+                onClick={() =>
+                  navigate(`/dashboard/bids/${gig._id}`)
+                }
+                className="w-full border border-red-500 text-red-600 py-2.5 rounded-xl"
+              >
+                Show Bids
+              </button>
+            ) : (
+              <div className="w-full text-center py-3 rounded-xl border font-semibold text-gray-600">
+                Assigned
+              </div>
+            )
+          ) : (
             <button
-              onClick={() => navigate(`/dashboard/bids/${gig.id}`)}
-              className="w-full border border-red-500 text-red-600 py-2.5 rounded-xl"
-            >
-              View Bids
-            </button>
-          )}
-
-          {/* Freelancer View */}
-          {!isCreator && !myBid && (
-            <button
-              onClick={() => navigate(`/dashboard/gigs/${gig.id}/place-bid`)}
+              onClick={() =>
+                navigate(`/dashboard/bids/${gig._id}/place`)
+              }
               className="w-full bg-red-500 text-white py-2.5 rounded-xl hover:bg-red-600"
             >
               Place Bid
             </button>
-          )}
-
-          {/* Already Placed Bid */}
-          {!isCreator && myBid && (
-            <div className="w-full text-center py-3 rounded-xl border">
-              <p className="text-sm text-gray-500 mb-1">Your Bid Status</p>
-              <p
-                className={`font-semibold ${
-                  myBid.status === "pending"
-                    ? "text-yellow-600"
-                    : myBid.status === "accepted"
-                    ? "text-green-600"
-                    : "text-red-600"
-                }`}
-              >
-                {myBid.status.toUpperCase()}
-              </p>
-            </div>
           )}
         </div>
       </div>

@@ -1,21 +1,30 @@
-import { useState } from "react";
-import { bids,gigs } from "../constant";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import api from "../config/api";
 
-const Bids = ({ isSearchBar, OwnBidId }) => {
+const Bids = ({ isSearchBar }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [bidList,setBidList]=useState([])
 
-  let bidList = bids.filter((bid) => bid.freelancerId === OwnBidId)
+  useEffect(()=>{
+    const fetchBids=async()=>{
+      try{
+        const {data}=await api.get("/api/bids/my-gigs",{withCredentials:true})
+        setBidList(data)
+      }catch(err){
+        toast.error(err.response?.data?.message)
+      }
+    }
+    fetchBids();
+  },[])
 
   if (isSearchBar && searchTerm) {
-    bidList = bidList.filter(
+    setBidList(bidList.filter(
       (bid) =>
         bid.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
         bid.status.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    ));
   }
-
-  const getGigTitle = (gigId) =>
-    gigs.find((g) => g.id === gigId)?.title || "Unknown Gig";
 
   return (
     <div>
@@ -45,7 +54,7 @@ const Bids = ({ isSearchBar, OwnBidId }) => {
               className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col gap-2"
             >
               <h3 className="text-lg font-semibold text-gray-800">
-                {getGigTitle(bid.gigId)}
+                {bid.gigId.title}
               </h3>
 
               <p className="text-sm text-gray-600">
@@ -53,7 +62,7 @@ const Bids = ({ isSearchBar, OwnBidId }) => {
               </p>
 
               <div className="flex justify-between items-center mt-2 text-sm">
-                <span className="text-gray-500">Bid ID: {bid.id}</span>
+                <span className="text-gray-500">Bid ID: {bid._id.slice(-5)}</span>
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-medium ${
                     bid.status === "pending"

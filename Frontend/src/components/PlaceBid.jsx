@@ -1,8 +1,12 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import api from '../config/api';
+import toast from 'react-hot-toast';
 
 const PlaceBid = () => {
     const navigate = useNavigate();
+    const {gigId}=useParams();
+
 
   const [formData, setFormData] = useState({
     message:"",
@@ -11,8 +15,14 @@ const PlaceBid = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
+    try{
+      const {data}=await api.post(`/api/bids/${gigId}/place`,{message:formData.message},{withCredentials:true})
+      toast.success(data.message);
+    }catch(err){
+      toast.error(err.response?.data?.message)
+    }
   }
   return (
     <div

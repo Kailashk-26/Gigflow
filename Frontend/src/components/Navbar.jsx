@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { LayoutDashboard, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 const Navbar = ({ setIsSearchBar }) => {
-  const user = false;
+  const {isAuthenticated} = useAuth();
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -44,7 +45,7 @@ const Navbar = ({ setIsSearchBar }) => {
 
         <button
           onClick={() =>
-            !user ? navigate("/state") : navigate("/dashboard")
+            !isAuthenticated ? navigate("/state") : navigate("/dashboard")
           }
           className={`px-6 py-2.5 rounded-full transition ${
             isScrolled
@@ -52,7 +53,7 @@ const Navbar = ({ setIsSearchBar }) => {
               : "bg-white text-black"
           }`}
         >
-          {user ? <LayoutDashboard /> : "Login"}
+          {isAuthenticated ? <LayoutDashboard /> : "Login"}
         </button>
       </div>
     </nav>

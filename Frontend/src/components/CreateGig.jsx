@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../config/api";
+import toast from "react-hot-toast";
 
-const CreateGigForm = ({ onSubmit }) => {
+const CreateGigForm = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     budget: "",
-    status: "open",
   });
 
   const handleChange = (e) => {
@@ -16,20 +17,29 @@ const CreateGigForm = ({ onSubmit }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+    const handleSubmit = async (e) => {
+      e.preventDefault();
 
-    if (!formData.title || !formData.description || !formData.budget) {
-      return alert("Please fill all fields");
-    }
+      if (!formData.title || !formData.description || !formData.budget) {
+        return alert("Please fill all fields");
+      }
 
-    onSubmit?.({
-      ...formData,
-      budget: Number(formData.budget),
-    });
-
-    navigate("/dashboard");
+      try {
+        const{data}=await api.post("/api/gigs/create",
+          {
+            title: formData.title,
+            description: formData.description,
+            budget: Number(formData.budget),
+          },
+          { withCredentials: true }
+        );
+        toast.success(data.message)
+        navigate("/dashboard");
+      } catch (err) {
+        toast.error(err.response?.data?.message || "Failed to create gig");
+      }
   };
+
 
   return (
     <div
@@ -80,21 +90,6 @@ const CreateGigForm = ({ onSubmit }) => {
             className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-400"
           />
         </div>
-        {/* <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-600 mb-1">
-            Status
-          </label>
-          <select
-            name="status"
-            value={formData.status}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-400"
-          >
-            <option value="open">Open</option>
-            <option value="assigned">Assigned</option>
-          </select>
-        </div> */}
-
         <button
           type="submit"
           className="w-full bg-red-500 text-white py-2.5 rounded-xl font-medium hover:bg-red-600 active:scale-95"
