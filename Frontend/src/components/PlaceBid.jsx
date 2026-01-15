@@ -23,6 +23,9 @@ const PlaceBid = () => {
     }catch(err){
       toast.error(err.response?.data?.message)
     }
+    finally{
+      navigate(-1)
+    }
   }
   return (
     <div

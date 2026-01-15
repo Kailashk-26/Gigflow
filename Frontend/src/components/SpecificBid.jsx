@@ -27,6 +27,8 @@ const BidListModal = () => {
       toast.success(data.message)
     }catch(err){
       toast.error(err.response?.data?.message)
+    }finally{
+      navigate(-1)
     }
   };
 

@@ -79,6 +79,7 @@ const GigDetail = () => {
               </div>
             )
           ) : (
+            gig.status === "open" && (
             <button
               onClick={() =>
                 navigate(`/dashboard/bids/${gig._id}/place`)
@@ -87,7 +88,7 @@ const GigDetail = () => {
             >
               Place Bid
             </button>
-          )}
+          ))}
         </div>
       </div>
     </div>

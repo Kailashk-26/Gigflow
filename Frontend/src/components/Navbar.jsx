@@ -3,7 +3,7 @@ import { LayoutDashboard, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
-const Navbar = ({ setIsSearchBar }) => {
+const Navbar = ({setIsSearchBar }) => {
   const {isAuthenticated} = useAuth();
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);

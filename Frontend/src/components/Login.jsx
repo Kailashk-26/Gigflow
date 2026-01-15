@@ -3,11 +3,13 @@ import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "../config/api";
 import toast from "react-hot-toast";
+import useAuth from "../hooks/useAuth";
 
 const Login = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const state = searchParams.get("state") || "login";
   const navigate=useNavigate();
+  const {fetchUser}=useAuth()
 
   const [formData, setFormData] = useState({
     name: "",
@@ -22,10 +24,12 @@ const Login = () => {
         const {data}=await api.post("api/users/login",{email:formData.email,password:formData.password},{withCredentials:true})
         toast.success(data.message);
         navigate("/")
+        fetchUser()
       }
       else{
         const {data}=await api.post("api/users/register",{name:formData.name,email:formData.email,password:formData.password},{withCredentials:true})
         toast.success(data.message);
+        fetchUser();
         navigate("/")
       }
     }catch(err){

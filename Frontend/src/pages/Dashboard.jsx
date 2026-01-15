@@ -5,17 +5,20 @@ import Gigs from "../components/Gigs";
 import Bids from "../components/Bids";
 import toast from "react-hot-toast";
 import api from "../config/api";
+import useAuth from "../hooks/useAuth";
 
 const Dashboard = () => {
   const [tab, setTab] = useState("Gigs");
   const [showGigSearch, setShowGigSearch] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const navigate=useNavigate();
+  const {fetchUser}=useAuth();
 
   const handleLogout=async()=>{
     try{
       const {data}=await api.post('/api/users/logout',{},{withCredentials:true})
       toast.success(data.message)
+      fetchUser();
       navigate('/')
     }catch(err){
       toast.error(err.response?.data?.message)
