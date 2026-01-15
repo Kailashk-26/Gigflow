@@ -61,7 +61,7 @@ const GigDetail = () => {
           </span>
         </div>
 
-        {/* ACTION SECTION */}
+        {/* Actions */}
         <div className="mt-6">
           {isOwner ? (
             gig.status === "open" ? (

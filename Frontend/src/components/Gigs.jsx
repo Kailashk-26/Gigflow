@@ -12,7 +12,6 @@ const Gigs = ({ isSearchBar, onDashboard }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  // Fetch gigs
   useEffect(() => {
     const getGigs = async () => {
       try {

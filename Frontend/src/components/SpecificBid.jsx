@@ -46,12 +46,6 @@ const BidListModal = () => {
           Bids
         </h2>
 
-        {/* {gig && (
-          <p className="text-sm text-gray-500 mb-6">
-            {gig.title}
-          </p>
-        )} */}
-
         {specificBidList.length === 0 ? (
           <p className="text-center text-gray-500 py-10">
             Nobody bid yet.
@@ -90,7 +84,6 @@ const BidListModal = () => {
                   {bid.message}
                 </p>
 
-                {/* Footer */}
                 <div className="flex justify-between items-center pt-2 border-t">
                   <span className="text-xs text-gray-500">
                     Bid ID: {bid._id.slice(-5)}
