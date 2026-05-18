@@ -3,7 +3,7 @@ import User from "../models/user.js";
 
 const protect = async (req, res, next) => {
   try {
-    const token = req.cookies?.token;
+    const token = req.token;
 
     if (!token) {
       return res.status(401).json({
